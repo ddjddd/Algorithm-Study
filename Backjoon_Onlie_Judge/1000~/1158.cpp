@@ -1,38 +1,49 @@
 #include <iostream>
-#include <cstdlib>
-#include <cstdio>
-#include <string>
-#include <vector>
-#include <algorithm>
 
 using namespace std;
 
-int main () {
-	int max, iter;
-	cin >> max >> iter;
+int arr[5000];
+bool visit[5000];
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	//freopen("input.txt", "r", stdin);
+
+	int a, b; cin >> a >> b;
 	
-	int arr[max];
-	bool visit[max];
-	for(int i = 0; i < max; i++) {
-		arr[i] = i+1;
+	for (int i = 0; i < a; i++) {
+		arr[i] = i + 1;
 		visit[i] = false;
 	}
-	int temp = iter-1;
-	cout << '<' << arr[temp];
-	visit[temp] = true;
-	for(int i = 1; i < max; i++) {
-		for(int j = 0; j < iter; j++) {
-			temp++;
-			temp %= max;
-			while(visit[temp] != false) {
-				temp++;
-				temp %= max;
+	int k = b - 1, vc = 0, index = 0;
+
+	cout << '<';
+	while (true) {
+		int i = 0;
+		while (i < k) {
+			if (!visit[index]) {
+				i++;
 			}
+			index = (index + 1) % a;
 		}
-		cout << ", " << arr[temp];
-		visit[temp] = true;
+		while(visit[index]) index = (index + 1) % a;
+		visit[index] = true;
+		
+
+		cout << arr[index];
+
+		vc++;
+		if (vc == a) {
+			cout << '>' << '\n';
+			break;
+		}
+		else {
+			cout << ',' << ' ';
+		}
+		
+		index = (index + 1) % a;
 	}
-	cout << ">\n";
-	
+
 	return 0;
 }

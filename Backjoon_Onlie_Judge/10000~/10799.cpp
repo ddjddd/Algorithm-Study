@@ -1,33 +1,33 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <iostream>
 
-int main () {
-	char buf[100001];
-	scanf(" %s", buf);
-	int size = strlen(buf);
+using namespace std;
+
+char buf[100001];
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 	
-	int ret = 0, stack = 0;
-	int a = 0, b = 1;
-	while (buf[a] == ')' || b<size) {
-		if(buf[a] == '(') {
-			if(buf[b] == ')') {
+	cin >> buf;
+	int ret = 0, stack = 0, a = 0;
+
+	while (buf[a] == ')' || buf[a+1] == ')' || buf[a+1] == '(') {
+		if (buf[a] == '(') {
+			if (buf[a+1] == ')') {
 				ret += stack;
-			 	a++; b++;
+				a++;
 			}
 			else {
-				stack ++;
+				stack++;
 			}
 		}
 		else {
 			ret++;
 			stack--;
 		}
-		
 		a++;
-		b++;
 	}
-	printf("%d\n", ret);
-	
+
+	cout << ret << '\n';
 	return 0;
 }

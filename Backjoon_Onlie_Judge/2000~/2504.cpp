@@ -1,62 +1,111 @@
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <stack>
+#include <utility>
 
-int stack[2][30] = {0, };
-int top = -1;
+using namespace std;
+
+typedef pair<char, int> node;
 
 int main () {
 	char buf[31];
+	stack <node> s;
 	scanf(" %s", buf);
-	int i = 0, len = strlen(buf);
-	int ret = 0, temp = 1, t = 0;
-	for(i; i < len; i++) {
+	int len = strlen(buf);
+	
+	
+	for(int i = 0; i < len; i++) {
+		bool tag = false;
 		if(buf[i] == '(') {
-			stack[0][++top] = 2;
-			if(temp != 1) {
-				stack[1][top] = temp;
-				temp = 1;
+			s.push(make_pair('(', 0));
+		}
+		else if (buf[i] == ')') {
+			if (!s.empty()) {
+				if (s.top().first == '(') s.pop();
+				else {
+					tag = true;
+				}
 			}
 			else {
-				stack[1][top] = 0;
+				tag = true;
 			}
 		}
-		else if(buf[i] == '[') {
-			stack[0][++top] = 3;
-			if(temp != 1) {
-				stack[1][top] = temp;
-				temp = 1;
+		else if (buf[i] == '[') {
+			s.push(make_pair('[', 0));
+		}
+		else if (buf[i] == ']') {
+			if (!s.empty()) {
+				if (s.top().first == '[') s.pop();
+				else {
+					tag = true;
+				}
 			}
 			else {
-				stack[1][top] = 0;
+				tag = true;
 			}
 		}
-		else if(buf[i] == ')') {
-			if(top != -1 && stack[0][top] == 2) {
-				temp *= 2;
-				temp += stack[1][top];
-				top--;
-			}
-			else {
-				printf("0\n");
-				return 1;
-			}
-		}
-		else if(buf[i] == ']') {
-			if(top != -1 && stack[0][top] == 3) {
-				temp *= 3;
-				temp += stack[1][top];
-				top--;
-			}
-			else {
-				printf("0\n");
-				return 1;
-			}
-		}
-		if(i == len-1 && top != -1) {
-			printf("0\n");
-			return 1;
+		if (tag) {
+			cout << 0 << endl;
+			return 0;
 		}
 	}
-	printf("%d\n", temp);
+	if (!s.empty()) {
+		cout << 0 << endl;
+		return 0;
+	}
+	
+	
+	for(int i = 0; i < len; i++) {
+		if(buf[i] == '(') {
+			s.push(make_pair('(', 0));
+		}
+		else if (buf[i] == ')') {
+			if (s.top().first == '(') {
+				s.pop();
+				s.push(make_pair('*', 2));
+			}
+			else if (s.top().first == '*') {
+				int tmp = 0;
+				do {
+					tmp += s.top().second;
+					s.pop();
+				} while (s.top().first != '(');
+				s.pop();
+				s.push(make_pair('*', tmp*2));
+			}
+		}
+		else if (buf[i] == '[') {
+			s.push(make_pair('[', 0));
+		}
+		else if (buf[i] == ']') {
+			if (s.top().first == '[') {
+				s.pop();
+				s.push(make_pair('*', 3));
+			}
+			else if (s.top().first == '*') {
+				int tmp = 0;
+				do {
+					tmp += s.top().second;
+					s.pop();
+				} while (s.top().first != '[');
+				s.pop();
+				s.push(make_pair('*', tmp*3));
+			}
+		}
+	}
+	
+	int ret = 0;
+	while (!s.empty()) {
+		ret += s.top().second;
+		s.pop();
+	}
+	cout << ret;
+	
+//	if (right == false) cout << 0 << endl;
+//	else cout << ret;
+	
+	
+	
 	return 0;
 }

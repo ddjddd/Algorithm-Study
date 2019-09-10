@@ -1,31 +1,27 @@
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
 
-int main () {
-	int cases;
-	scanf(" %d", &cases);
-	
-	int i = 0;
-	for(i; i < cases; i++) {
-		char temp[51];
-		scanf(" %s", temp);
-		int j = 0, l = strlen(temp), cnt = 0, invalid = 0;
-		for(; j < l; j++) {
-			if(temp[j] == '(') {
-				cnt++;
-			}
-			else if(cnt != 0 && temp[j] == ')') {
-				cnt--;
-			}
-			else {
-				invalid = 1;
-			}
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int cases; cin >> cases;
+
+	for (int i = 0; i < cases; i++) {
+		char temp[51]; cin >> temp;
+		int cnt = 0;
+		bool invalid = false;
+		for (int j = 0; temp[j] != '\0'; j++) {
+			if (temp[j] == '(') cnt++;
+			else if (cnt != 0 && temp[j] == ')') cnt--;
+			else invalid = true;
 		}
-		if(invalid == 1 || cnt != 0){
-			printf("NO\n");
+		if (invalid == 1 || cnt != 0) {
+			cout << "NO\n";
 		}
 		else {
-			printf("YES\n");
+			cout << "YES\n";
 		}
 	}
 	return 0;

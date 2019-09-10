@@ -2,8 +2,7 @@
 
 using namespace std;
 
-char buf[100001];
-int inst;
+char buf[1000001];
 
 struct node {
 	char c;
@@ -53,30 +52,36 @@ struct list {
 	}
 
 	void cmd_left() {
-		if (cursor != head) {
+		if (cursor != head && cursor != tail) {
 			cursor = cursor->prev;
 		}
 	}
 
 	void cmd_right() {
-		if (cursor != tail->prev) {
+		if (cursor != tail && cursor != tail->prev) {
 			cursor = cursor->next;
 		}
 	}
 
 	void cmd_push(char c) {
 		node* nNode = new node(c);
-		node* nn = cursor->next;
-		cursor->next = nNode;
-		nNode->prev = cursor;
-		nNode->next = nn;
-		nn->prev = nNode;
-
+		if (len == 0) {
+			head->next = nNode;
+			nNode->prev = head;
+			nNode->next = tail;
+			tail->prev = nNode;
+		}
+		else {
+			node* nn = cursor->next;
+			cursor->next = nNode;
+			nNode->prev = cursor;
+			nNode->next = nn;
+			nn->prev = nNode;
+		}
 		cursor = nNode;
-
 		len++;
 	}
-	
+
 	void cmd_delete() {
 		if (cursor != head && cursor != tail) {
 			node* t1 = cursor->prev;
@@ -92,9 +97,11 @@ struct list {
 	}
 
 	void print() {
-		node* ptr = head->next;
-		for (ptr; ptr != tail; ptr = ptr->next) {
-			cout << ptr->c;
+		if (len >= 0) {
+			node* ptr = head->next;
+			for (ptr; ptr != tail; ptr = ptr->next) {
+				cout << ptr->c;
+			}
 		}
 		cout << '\n';
 	}
@@ -105,32 +112,35 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	//freopen("input.txt", "r", stdin);
-	cin >> buf >> inst;
+	//freopen("output.txt", "w", stdout);
 
-	int len = 0;
-	list* l = new list();
+	int tC; cin >> tC;
+	for (int tc = 1; tc <= tC; tc++) {
+		int len = 0;
+		list* l = new list();
 
-	for (int i = 0; buf[i] != '\0'; i++) {
-		l->push(buf[i]);
+		cin >> buf;
+		for (int i = 0; buf[i] != '\0'; i++) {
+			len++;
+		}
+		for (int i = 0; i < len; i++) {
+			char c = buf[i];
+			if (c == '<') {
+				l->cmd_left();
+			}
+			else if (c == '>') {
+				l->cmd_right();
+			}
+			else if (c == '-') {
+				l->cmd_delete();
+			}
+			else {
+				l->cmd_push(c);
+			}
+		}
+		l->print();
 	}
 
-	for (int i = 0; i < inst; i++) {
-		char c; cin >> c;
-		if (c == 'L') {
-			l->cmd_left();
-		}
-		else if (c == 'D') {
-			l->cmd_right();
-		}
-		else if (c == 'B') {
-			l->cmd_delete();
-		}
-		else if (c == 'P') {
-			char t; cin >> t;
-			l->cmd_push(t);
-		}
-	}
-	l->print();
 
 	return 0;
 }
