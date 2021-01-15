@@ -1,53 +1,54 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
 
+int n = 0;
+vector<int> v;
+
+int arr[8007] = {0, };
+int tsum = 0;
+
 int main () {
-	int max;
-	scanf("%d", &max);
-	int *arr = new int[max];
-	for(int i = 0; i < max; i++)
-		scanf("%d", &arr[i]);
-	sort(arr, arr+max);
-	int sum = 0;
-	for(int i = 0; i < max; i++) {
-		sum += arr[i];
-	}
-	double mean = (double)sum / max;
-	int aMean;
-	if( mean > 0 )
-	{
-		if( mean - (int)mean < 0.5 )
-			aMean = (int)mean;
-		else //mean - (int)mean >= 0.5
-			aMean = (int)mean + 1;
-	}
-	else if( mean < 0 )
-	{
-		if( mean - (int)mean > -0.5) // -0.1, -0.2, -0.3, -0.4
-			aMean = (int)mean;
-		else // -0.5, -0.6, -0.7, -0.8, -0.9
-			aMean = (int)mean - 1;
-	}
-	
-	printf("%d\n%d\n", aMean, arr[max/2]);
-	int *count = new int[8001];
-	for(int i = 0; i < 8001; i++) count[i] = 0;
-	for(int i = 0; i < max; i++) {
-		count[arr[i]+4000]++;
-	}
-	int ret = 0, trial = 0;
-	for(int i = 1; i < 8001; i++) {
-		if (count[i] > count[ret]) {
-			ret = i;
-			trial = 0;
-		}
-		else if (count[i] == count[ret] && trial == 0) {
-			ret = i; trial++;
-		} 
-	}
-	printf("%d\n%d\n", ret-4000, arr[max-1] - arr[0]);
-	
-	return 0;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    
+    cin >> n;
+    for(int i = 0; i < n; i++) {
+        int tmp; cin >> tmp;
+        arr[tmp+4000]++;
+        tsum += tmp;
+        v.push_back(tmp);
+    }
+
+    sort(v.begin(), v.end());
+
+    
+    double tavg = (double)tsum / (double) n;
+    int avg = tavg > 0 ? (int)(tavg+0.5) : (int)(tavg-0.5);
+
+    int tmin = 0, tans = 0;
+    bool flag = false;
+    for(int i = 0; i < 8001; i++) {
+        if(arr[i] == tmin) {
+            if(!flag) {
+                flag = true;
+                tans = i;
+            }
+        }
+        if(arr[i] > tmin) {
+            flag = false;
+            tans = i;
+            tmin = arr[i];
+        }
+    }
+
+    cout << avg << endl;
+    cout << v[n/2] << endl;
+    cout << tans-4000 << endl;
+    cout << v[n-1] - v[0] << endl;
+    
+    return 0;
 }
