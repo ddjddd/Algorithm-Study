@@ -9,14 +9,14 @@ int main () {
 	int input;
 	cin >> input;
 	int dp[size] = {0, };
-	
+
 	int coins, coin[1000];
 	for(int i = 1; i*i <= size; i++) {
 		coin[i] = i*i;
 		coins = i;
 	}
-	
-	
+
+
 	for(int i = 1; i < size; i++) {
 		int k = size;
 		for(int j = 1; j <= coins; j++) {
@@ -27,8 +27,8 @@ int main () {
 		}
 		dp[i] = k;
 	}
-		
+
 	cout << dp[input] << endl;
-	
+
 	return 0;
 }
