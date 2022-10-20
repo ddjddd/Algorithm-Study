@@ -1,2 +1,4 @@
 .vscode
 *.exe
+venv/
+a.py
