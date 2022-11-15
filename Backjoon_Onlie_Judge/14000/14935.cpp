@@ -1,2 +1,2 @@
 #include <cstdio>
-int main () {printf("FA\n");}
+int main() { printf("FA\n"); }
